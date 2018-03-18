@@ -3,7 +3,7 @@ Plugin for EDMCOverlay
 """
 import time
 
-from edmcoverlay import ensure_service, Overlay, shutdown_service
+from edmcoverlay import ensure_service, Overlay
 
 client = Overlay()
 
@@ -16,7 +16,7 @@ def plugin_start():
     ensure_service()
     time.sleep(2)
     try:
-        client.send_message("_", "EDMC Overlay Ready", "#ffa500", 5, 5, ttl=5, size="large")
+        client.send_message("edmcintro", "EDMC Ready", "yellow", 30, 165, ttl=6)
     except Exception:
         pass
     return "EDMCOverlay"
@@ -33,10 +33,3 @@ def journal_entry(cmdr, system, station, entry, state):
     :return:
     """
     ensure_service()
-
-def plugin_stop():
-    """
-    Stop this plugin and shutdown running overlay service
-    :return:
-    """
-    shutdown_service()
