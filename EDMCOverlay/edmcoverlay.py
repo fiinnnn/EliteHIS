@@ -52,12 +52,12 @@ def ensure_service():
     if program:
         # if it isnt running, start it
         try:
+            exedir = os.path.abspath(os.path.dirname(program))
             if _service:
                 if _service.poll() is not None:
                     _service = None
             if not _service:
                 print "starting {}".format(program)
-                exedir = os.path.abspath(os.path.dirname(program))
                 _service = subprocess.Popen([program], cwd=exedir)
 
             time.sleep(2)
@@ -66,6 +66,27 @@ def ensure_service():
                 raise Exception("{} exited".format(program))
         except Exception as err:
             print "error in ensure_service: {}".format(err)
+
+
+def shutdown_service():
+    """
+    Shutdown the overlay service program
+    :return:
+    """
+    global _service
+    try:
+        # if it is running, shut it down
+        if _service:
+            pid = _service.pid
+            if _service.poll() is None:
+                _service.terminate()
+            time.sleep(2)
+            if _service.poll() is not None:
+                print "{} service {} exited".format(PROG, pid)
+        else:
+            print "{} service not running.".format(PROG)
+    except Exception as err:
+        print "error in shutdown_service: {}".format(err)
 
 
 class Overlay(object):
@@ -87,42 +108,7 @@ class Overlay(object):
         connection.connect((self.server, self.port))
         self.connection = connection
 
-    def send_shape(self, shapeid, shape, color, fill, x, y, w, h, ttl):
-        """
-        Send a message
-        :param shapeid:
-        :param shape:
-        :param color:
-        :param fill:
-        :param x:
-        :param y:
-        :param w:
-        :param h:
-        :param ttl:
-        :return:
-        """
-        if not self.connection:
-            ensure_service()
-            self.connect()
-
-        msg = {"id": shapeid,
-               "shape": shape,
-               "color": color,
-               "fill": fill,
-               "x": x, "y": y,
-               "w": w, "h": h,
-               "ttl": ttl
-               }
-        try:
-            print json.dumps(msg)
-            self.connection.send(json.dumps(msg))
-            self.connection.send("\n")
-        except Exception as err:
-            print "error in send_message: {}".format(err)
-            self.connection = None
-            raise
-
-    def send_message(self, msgid, text, color, x, y, ttl=4, size="normal"):
+    def send_message(self, msgid, text, color, x, y, ttl=0, size="normal"):
         """
         Send a message
         :param msgid:
@@ -152,13 +138,87 @@ class Overlay(object):
             self.connection = None
             raise
 
+    def send_rectangle(self, msgid, color, fill, x, y, w, h, ttl=0):
+        """
+        Send a message
+        :param msgid:
+        :param color: outline color
+        :param fill: fill color
+        :param x:
+        :param y:
+        :param w:
+        :param h:
+        :param ttl:
+        :return:
+        """
+        if not self.connection:
+            ensure_service()
+            self.connect()
+
+        msg = {"id": msgid,
+               "shape": "rect",
+               "color": color,
+               "fill": fill,
+               "x": x, "y": y,
+               "w": w, "h": h,
+               "ttl": ttl}
+        try:
+            self.connection.send(json.dumps(msg))
+            self.connection.send("\n")
+        except Exception as err:
+            print "error in send_rectangle: {}".format(err)
+            self.connection = None
+            raise
+
+    def vectorpoint(self, x, y, color, marker="", text=""):
+        """
+        Convert point values to vector point object
+        :param x:
+        :param y:
+        :param color: line color
+        :param marker: mark point as "cross" or "circle"
+        :param text: mark point with text
+        :return:
+        """
+        return {"x": x, "y": y,
+                "color": color,
+                "marker": marker,
+                "text": text}
+
+    def send_vector(self, msgid, color, points, ttl=0):
+        """
+        Send a message
+        :param msgid:
+        :param color: line color
+        :param points: list of points [[x,y,color,marker,text],...]
+        :param ttl:
+        :param size: font size, either "normal" or "large"
+        :return:
+        """
+        if not self.connection:
+            ensure_service()
+            self.connect()
+    
+        msg = {"id": msgid,
+               "shape": "vect",
+               "color": color,
+               "vector": [apply(self.vectorpoint, point) for point in points],
+               "ttl": ttl}
+        try:
+            self.connection.send(json.dumps(msg))
+            self.connection.send("\n")
+        except Exception as err:
+            print "error in send_vector: {}".format(err)
+            self.connection = None
+            raise
+
 
 def debugconsole():
     """
     Print stuff
     """
     import load as loader
-    
+
     print >> sys.stderr, "Loading..\n"
     loader.plugin_start()
 
