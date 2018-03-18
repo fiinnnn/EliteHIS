@@ -37,14 +37,14 @@ def plugin_prefs(parent, cmdr, is_beta):
     """
     frame = nb.Frame(parent)
 
-    nb.Label(frame, text="Latitude").grid()
-    nb.Entry(frame, textvariable=this.targetLat).grid()
+    nb.Label(frame, text="Latitude").grid(row=0)
+    nb.Entry(frame, textvariable=this.targetLat).grid(row=0, column=1)
 
-    nb.Label(frame, text="Longitude").grid()
-    nb.Entry(frame, textvariable=this.targetLong).grid()
+    nb.Label(frame, text="Longitude").grid(row=1)
+    nb.Entry(frame, textvariable=this.targetLong).grid(row=1, column=1)
 
-    nb.Label(frame, text="Planet radius (in metres)").grid()
-    nb.Entry(frame, textvariable=this.planetRadius).grid()
+    nb.Label(frame, text="Planet radius (in metres)").grid(row=2)
+    nb.Entry(frame, textvariable=this.planetRadius).grid(row=2, column=1)
     return frame
 
 def dashboard_entry(cmdr, is_beta, entry):
