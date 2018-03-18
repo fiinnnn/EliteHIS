@@ -67,6 +67,18 @@ def ensure_service():
         except Exception as err:
             print "error in ensure_service: {}".format(err)
 
+def shutdown():
+    """
+    Stop the overlay service program
+    """
+    global _service
+    
+    try:
+        if _service:
+            if _service.poll() is None:
+                _service.terminate()
+    except Exception as e:
+        print "error in shutdown: {}".format(e)
 
 class Overlay(object):
     """

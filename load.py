@@ -22,6 +22,14 @@ def plugin_start():
     print("EliteHIS: loaded")
     return "EliteHIS"
 
+def plugin_stop():
+    """
+    Stop EliteHIS plugin
+    """
+    #Close EDMCOverlay
+    overlay.shutdown_overlay()
+    print("EliteHIS: stopped")
+
 def plugin_prefs(parent, cmdr, is_beta):
     """
     Create settings dialog
