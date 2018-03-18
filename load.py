@@ -41,9 +41,12 @@ def dashboard_entry(cmdr, is_beta, entry):
     Called when something on the cockpit display changes
     """
     #Lat/Long not always in status.json
-    currentLat = entry['Latitude']
-    currentLong = entry['Longitude']
-    recalculate_heading(currentLat, currentLong)
+    try:
+        currentLat = entry['Latitude']
+        currentLong = entry['Longitude']
+        recalculate_heading(currentLat, currentLong)
+    except KeyError:
+        pass
 
 def recalculate_heading(currentLat, currentLong):
     """
