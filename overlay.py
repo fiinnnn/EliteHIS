@@ -13,4 +13,5 @@ except ImportError:
 this.overlay = edmcoverlay.Overlay()
 
 def show_heading(heading):
-    this.overlay.send_message("heading", "Heading: " + str(heading), "#ff7100", 100, 100, 8)
+    this.overlay.send_message("heading", "Heading: " + str(heading), "#ff7100", 2, 2, 8, "large")
+    #this.overlay.send_message("distance", "Distance: ", "#ff7100", 2, 25, 8, "large")
