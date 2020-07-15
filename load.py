@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
-
 import sys
 
-import Tkinter as tk
+import tkinter as tk
+
 import myNotebook as nb
 from config import config
 
@@ -10,6 +9,9 @@ import utils
 import overlay
 
 this = sys.modules[__name__]
+
+def plugin_start3(plugin_dir):
+	return plugin_start()
 
 def plugin_start():
     """
@@ -27,8 +29,6 @@ def plugin_stop():
     """
     Stop EliteHIS plugin
     """
-    #Close EDMCOverlay
-    overlay.shutdown_overlay()
     print("EliteHIS: stopped")
 
 def plugin_prefs(parent, cmdr, is_beta):

@@ -12,7 +12,7 @@ NOTE: The distance is only an estimate to give you an idea when to start your de
 [![EliteHIS demo](https://img.youtube.com/vi/WTL6xmgp5Tk/0.jpg)](https://www.youtube.com/watch?v=WTL6xmgp5Tk)
 
 ## Installation
-EDMCOverlay is already included and does not need to be installed manually
+- Install [EDMCOverlay](https://github.com/inorton/edmcoverlay/releases)
 - Download the latest release from the [releases page](https://github.com/FInnvos123/EliteHIS/releases)
 - Press the "Open" button on the plugins settings tab in EDMC
 - Open EliteHIS.zip and move the directory contained inside into the plugins directory
